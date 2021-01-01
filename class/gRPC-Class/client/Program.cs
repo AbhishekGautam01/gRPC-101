@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dummy;
+using Greet;
 
 namespace client
 {
@@ -20,7 +21,19 @@ namespace client
                     Console.WriteLine("The client connected successfully");
             });
 
-            var client = new DummyService.DummyServiceClient(channel);
+            var client = new GreetingService.GreetingServiceClient(channel);
+            //It looks like we are directly calling the function but this call will happen over http/2 and will goto server. 
+            var greeting = new Greeting()
+            {
+                FirstName = "Abhishek",
+                LastName = "Gautam"
+            };
+            var request = new GreetingRequest()
+            {
+                Greeting = greeting
+            };
+            var response = client.Greet(request);
+            Console.WriteLine(response.Result);
             channel.ShutdownAsync().Wait();
             Console.ReadLine();
         }
