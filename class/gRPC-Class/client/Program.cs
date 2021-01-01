@@ -1,11 +1,8 @@
 ﻿using Grpc.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Dummy;
 using Greet;
+using Sum;
 
 namespace client
 {
@@ -21,7 +18,7 @@ namespace client
                     Console.WriteLine("The client connected successfully");
             });
 
-            var client = new GreetingService.GreetingServiceClient(channel);
+            var greetingClient = new GreetingService.GreetingServiceClient(channel);
             //It looks like we are directly calling the function but this call will happen over http/2 and will goto server. 
             var greeting = new Greeting()
             {
@@ -32,8 +29,22 @@ namespace client
             {
                 Greeting = greeting
             };
-            var response = client.Greet(request);
-            Console.WriteLine(response.Result);
+            var greetingResponse = greetingClient.Greet(request);
+            Console.WriteLine(greetingResponse.Result);
+
+            var sumClient = new SumService.SumServiceClient(channel);
+            var add = new Addition()
+            {
+                First = 10,
+                Second = 3
+            };
+            var sumRequest = new SumRequest()
+            {
+                Sum = add
+            };
+            var sumResponse = sumClient.Sum(sumRequest);
+            Console.WriteLine(sumResponse);
+
             channel.ShutdownAsync().Wait();
             Console.ReadLine();
         }

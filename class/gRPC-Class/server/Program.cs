@@ -1,5 +1,6 @@
 ﻿using Greet;
 using Grpc.Core;
+using Sum;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,15 +20,14 @@ namespace server
             {
                 server = new Server()
                 {
-                    Services = { GreetingService.BindService(new GreetingServiceImpl())}, 
+                    Services = { GreetingService.BindService(new GreetingServiceImpl()), SumService.BindService(new SumServiceImpl()) },
                     Ports = { new ServerPort("localhost", PORT, ServerCredentials.Insecure) }
                 };
                 server.Start();
                 Console.WriteLine("The server is listening on the port: " + PORT);
                 Console.ReadKey();
             }
-            catch (IOException e)
-            {
+            catch (IOException e){
                 throw;
             }
             finally
