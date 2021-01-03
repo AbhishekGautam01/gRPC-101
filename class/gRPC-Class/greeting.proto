@@ -31,6 +31,14 @@ message LongGreetResponse {
 	string result = 1;
 }
 
+message GreetEveryoneRequest{
+	Greeting greeting = 1;
+}
+
+message GreetingEveryoneResponse{
+	string result = 1;
+}
+
 
 service GreetingService {
 	rpc Greet (GreetingRequest) returns (GreetingResponse) {}
@@ -40,4 +48,7 @@ service GreetingService {
 
 	//client streaming
 	rpc LongGreet (stream LongGreetRequest) returns (LongGreetResponse){}
+
+	//bi di streaming 
+	rpc GreetEveryone (stream GreetEveryoneRequest) returns (stream GreetingEveryoneResponse){}
 }
