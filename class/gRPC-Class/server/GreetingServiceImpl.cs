@@ -7,7 +7,7 @@ using static Greet.GreetingService;
 
 namespace server
 {
-    public class GreetingServiceImpl: GreetingServiceBase
+    public class GreetingServiceImpl : GreetingServiceBase
     {
         public override Task<GreetingResponse> Greet(GreetingRequest request, ServerCallContext context)
         {
@@ -25,6 +25,17 @@ namespace server
             {
                 await responseStream.WriteAsync(new GreetingManyTimesResponse() { Result = result });
             }
+        }
+
+        public override async Task<LongGreetResponse> LongGreet(IAsyncStreamReader<LongGreetRequest> requestStream, ServerCallContext context)
+        {
+            var result = String.Empty;
+            while (await requestStream.MoveNext())
+            {
+                result += $"Hello {requestStream.Current.Greeting.FirstName} {requestStream.Current.Greeting.LastName} {Environment.NewLine}";
+
+            }
+            return new LongGreetResponse() { Result = result };
         }
     }
 }
