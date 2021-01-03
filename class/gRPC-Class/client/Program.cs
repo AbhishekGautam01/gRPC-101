@@ -180,5 +180,16 @@ namespace client
                 Console.WriteLine("Error: " + e.Status.Detail);
             }
         }
+
+        public static async Task DoGreetingWithDeadLine(GreetingService.GreetingServiceClient client)
+        {
+            try {
+                var response = client.Greet_With_Deadline(new GreetingRequest() { Greeting = new Greeting() { FirstName = "Abhishek" } }, deadline: DateTime.UtcNow.AddMilliseconds(500));
+                Console.WriteLine(response.Result);
+            }
+            catch (RpcException e) when (e.StatusCode == StatusCode.DeadlineExceeded) {
+                Console.WriteLine("Error: " + e.Status.Detail);
+            }
+        }
     }
 }

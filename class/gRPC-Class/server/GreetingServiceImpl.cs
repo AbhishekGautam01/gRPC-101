@@ -48,5 +48,11 @@ namespace server
             }
 
         }
+
+        public override async Task<GreetingResponse> Greet_With_Deadline(GreetingRequest request, ServerCallContext context)
+        {
+            await Task.Delay(300);
+            return new GreetingResponse() { Result = $"hello {request.Greeting.FirstName}" };
+        }
     }
 }

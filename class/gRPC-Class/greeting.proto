@@ -40,6 +40,7 @@ message GreetingEveryoneResponse{
 }
 
 
+
 service GreetingService {
 	rpc Greet (GreetingRequest) returns (GreetingResponse) {}
 
@@ -51,4 +52,7 @@ service GreetingService {
 
 	//bi di streaming 
 	rpc GreetEveryone (stream GreetEveryoneRequest) returns (stream GreetingEveryoneResponse){}
+
+	//deadlines
+	rpc Greet_With_Deadline (GreetingRequest) returns (GreetingResponse){}
 }
