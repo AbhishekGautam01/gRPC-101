@@ -4,6 +4,7 @@ using Sum;
 using System;
 using System.IO;
 using Calculator;
+using Sqrt;
 
 namespace server
 {
@@ -24,7 +25,8 @@ namespace server
                 {
                     Services = { GreetingService.BindService(new GreetingServiceImpl()), 
                                  SumService.BindService(new SumServiceImpl()),
-                                 calculator.BindService(new CalculatorServiceImpl())},
+                                 calculator.BindService(new CalculatorServiceImpl()),
+                                 SqrtService.BindService(new SqrtServiceImpl())},
                     Ports = { new ServerPort("localhost", PORT, ServerCredentials.Insecure) }
                 };
                 server.Start();

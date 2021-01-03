@@ -5,6 +5,7 @@ using Greet;
 using Sum;
 using Calculator;
 using System.Linq;
+using Sqrt;
 
 namespace client
 {
@@ -102,6 +103,10 @@ namespace client
             #region Bi Di FindMaximum 
             await DoFindMaximum(calculatorClient);
             #endregion
+            #region sqrt error 
+            var sqrtClient = new SqrtService.SqrtServiceClient(channel);
+            await DoSqrt(sqrtClient);
+            #endregion
             channel.ShutdownAsync().Wait();
             Console.ReadLine();
         }
@@ -160,6 +165,20 @@ namespace client
             }
             await stream.RequestStream.CompleteAsync();
             await responseReaderTask;
+        }
+
+        public static async Task DoSqrt(SqrtService.SqrtServiceClient client)
+        {
+            int number = -1;
+            try
+            {
+                var response = client.sqrt(new SqrtRequest() { Number = number });
+                Console.WriteLine("Sqrt : " + response.SqaureRoot);
+            }
+            catch (RpcException e)
+            {
+                Console.WriteLine("Error: " + e.Status.Detail);
+            }
         }
     }
 }
