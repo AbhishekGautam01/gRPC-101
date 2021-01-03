@@ -27,5 +27,17 @@ namespace server
                 }
             }
         }
+
+        public override async Task<ComputeAverageResponse> ComputeAverage(IAsyncStreamReader<ComputeAverageRequest> requestStream, ServerCallContext context)
+        {
+            int currentSum = 0;
+            int totalElement = 0;
+            while(await requestStream.MoveNext())
+            {
+                totalElement++;
+                currentSum += requestStream.Current.Input;
+            }
+            return new ComputeAverageResponse() { Response = (totalElement != 0) ? currentSum / totalElement : currentSum };
+        }
     }
 }

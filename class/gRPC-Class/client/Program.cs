@@ -34,6 +34,20 @@ namespace client
             var unaryGreetingResponse = greetingClient.Greet(request);
             Console.WriteLine(unaryGreetingResponse.Result);
             #endregion
+            #region SUM-Unary
+            var sumClient = new SumService.SumServiceClient(channel);
+            var additionRequest = new Addition()
+            {
+                First = 10,
+                Second = 3
+            };
+            var sumRequest = new SumRequest()
+            {
+                Sum = additionRequest
+            };
+            var sumResponse = sumClient.Sum(sumRequest);
+            Console.WriteLine(sumResponse);
+            #endregion
             #region ServerStreaming 
             var serverStreamRequest = new GreetingManyTimesRequest() { Greeting = greetingRequest };
             var serverStreamResponse = greetingClient.GreetManyTimes(serverStreamRequest);
@@ -67,19 +81,15 @@ namespace client
             var longGreetResponse = await longGreetStream.ResponseAsync;
             Console.WriteLine(longGreetResponse);
             #endregion
-            #region SUM-Unary
-            var sumClient = new SumService.SumServiceClient(channel);
-            var additionRequest = new Addition()
+            #region Client Streaming - Average
+            var computeAverageStream = calculatorClient.ComputeAverage();
+            foreach (int i in Enumerable.Range(1, 4))
             {
-                First = 10,
-                Second = 3
-            };
-            var sumRequest = new SumRequest()
-            {
-                Sum = additionRequest
-            };
-            var sumResponse = sumClient.Sum(sumRequest);
-            Console.WriteLine(sumResponse);
+                await computeAverageStream.RequestStream.WriteAsync(new ComputeAverageRequest() { Input = i });
+            }
+            await computeAverageStream.RequestStream.CompleteAsync();
+            var average = await computeAverageStream.ResponseAsync;
+            Console.WriteLine($"Average: {average}");
             #endregion
             channel.ShutdownAsync().Wait();
             Console.ReadLine();
