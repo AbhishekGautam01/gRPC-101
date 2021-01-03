@@ -2,6 +2,7 @@
 using Grpc.Core;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using static Greet.GreetingService;
 
@@ -29,13 +30,13 @@ namespace server
 
         public override async Task<LongGreetResponse> LongGreet(IAsyncStreamReader<LongGreetRequest> requestStream, ServerCallContext context)
         {
-            var result = String.Empty;
+            var result = new StringBuilder();
             while (await requestStream.MoveNext())
             {
-                result += $"Hello {requestStream.Current.Greeting.FirstName} {requestStream.Current.Greeting.LastName} {Environment.NewLine}";
+                result.AppendLine($"Hello {requestStream.Current.Greeting.FirstName} {requestStream.Current.Greeting.LastName}");
 
             }
-            return new LongGreetResponse() { Result = result };
+            return new LongGreetResponse() { Result = result.ToString() };
         }
 
         public override async Task GreetEveryone(IAsyncStreamReader<GreetEveryoneRequest> requestStream, IServerStreamWriter<GreetingEveryoneResponse> responseStream, ServerCallContext context)

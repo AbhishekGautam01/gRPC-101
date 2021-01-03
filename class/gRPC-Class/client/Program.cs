@@ -8,9 +8,14 @@ using System.Linq;
 
 namespace client
 {
-    class Program
+    public class Program
     {
         const string TARGET = "localhost:50051";
+
+        protected Program()
+        {
+        }
+
         static async Task Main(string[] args)
         {
             Channel channel = new Channel(TARGET, ChannelCredentials.Insecure);
@@ -109,7 +114,7 @@ namespace client
                 while (await stream.ResponseStream.MoveNext())
                 {
                     Console.WriteLine("Recieved: " + stream.ResponseStream.Current.Result);
-                };
+                }
             });
             Greeting[] greetings =
             {
@@ -135,7 +140,7 @@ namespace client
                 while(await stream.ResponseStream.MoveNext())
                 {
                     Console.WriteLine("Current Maximum: " + stream.ResponseStream.Current.Response);
-                };
+                }
             });
 
             FindMaximumRequest[] requests =

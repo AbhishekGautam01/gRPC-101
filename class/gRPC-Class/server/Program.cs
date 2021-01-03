@@ -7,9 +7,14 @@ using Calculator;
 
 namespace server
 {
-    class Program
+    public class Program
     {
         const int PORT = 50051;
+
+        protected Program()
+        {
+        }
+
         static void Main(string[] args)
         {
             Server server = null;
@@ -27,6 +32,7 @@ namespace server
                 Console.ReadKey();
             }
             catch (IOException e){
+                Console.WriteLine("Exception: " + e.Message);
                 throw;
             }
             finally
