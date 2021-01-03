@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package calculator;
+
+message PrimeDecompositionRequest {
+	int32 input = 1; 
+}
+
+message PrimeDecompositionResponse {
+	int32 result = 1; 
+}
+
+service calculator {
+	rpc PrimeDecomposition (PrimeDecompositionRequest) returns (stream PrimeDecompositionResponse);
+}

@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using Greet;
 using Sum;
+using Calculator;
 
 namespace client
 {
@@ -38,6 +39,19 @@ namespace client
             while(await streamResponse.ResponseStream.MoveNext())
             {
                 Console.WriteLine(streamResponse.ResponseStream.Current.Result);
+                await Task.Delay(200);
+            }
+            #endregion
+            #region CalculatorService-Streaming
+            var calculatorClient = new calculator.calculatorClient(channel);
+            var decomposePrime = new PrimeDecompositionRequest()
+            {
+                Input = 120
+            };
+            var decomposePrimeResponse = calculatorClient.PrimeDecomposition(decomposePrime);
+            while(await decomposePrimeResponse.ResponseStream.MoveNext())
+            {
+                Console.WriteLine(decomposePrimeResponse.ResponseStream.Current.Result);
                 await Task.Delay(200);
             }
             #endregion

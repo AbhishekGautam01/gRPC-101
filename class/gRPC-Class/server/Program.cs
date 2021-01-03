@@ -3,6 +3,7 @@ using Grpc.Core;
 using Sum;
 using System;
 using System.IO;
+using Calculator;
 
 namespace server
 {
@@ -16,7 +17,9 @@ namespace server
             {
                 server = new Server()
                 {
-                    Services = { GreetingService.BindService(new GreetingServiceImpl()), SumService.BindService(new SumServiceImpl()) },
+                    Services = { GreetingService.BindService(new GreetingServiceImpl()), 
+                                 SumService.BindService(new SumServiceImpl()),
+                                 calculator.BindService(new CalculatorServiceImpl())},
                     Ports = { new ServerPort("localhost", PORT, ServerCredentials.Insecure) }
                 };
                 server.Start();
