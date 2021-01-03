@@ -94,6 +94,9 @@ namespace client
             #region Bi-Di Greeting
             await DoGreetEveryone(greetingClient);
             #endregion
+            #region Bi Di FindMaximum 
+            await DoFindMaximum(calculatorClient);
+            #endregion
             channel.ShutdownAsync().Wait();
             Console.ReadLine();
         }
@@ -121,6 +124,35 @@ namespace client
                 });
             }
 
+            await stream.RequestStream.CompleteAsync();
+            await responseReaderTask;
+        }
+        public static async Task DoFindMaximum(calculator.calculatorClient client)
+        {
+            var stream = client.FindMaximum();
+            var responseReaderTask = Task.Run(async () =>
+            {
+                while(await stream.ResponseStream.MoveNext())
+                {
+                    Console.WriteLine("Current Maximum: " + stream.ResponseStream.Current.Response);
+                };
+            });
+
+            FindMaximumRequest[] requests =
+            {
+                new FindMaximumRequest(){ Request = 1},
+                new FindMaximumRequest(){ Request = 5},
+                new FindMaximumRequest(){ Request = 3},
+                new FindMaximumRequest(){ Request = 6},
+                new FindMaximumRequest(){ Request = 2},
+                new FindMaximumRequest(){ Request = 0},
+
+            };
+
+            foreach (var request in requests)
+            {
+                await stream.RequestStream.WriteAsync(request);
+            }
             await stream.RequestStream.CompleteAsync();
             await responseReaderTask;
         }

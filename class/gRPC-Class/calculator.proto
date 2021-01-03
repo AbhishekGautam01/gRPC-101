@@ -18,7 +18,16 @@ message ComputeAverageResponse{
 	int32 response = 1;
 }
 
+message FindMaximumRequest {
+	int32 request = 1;
+}
+
+message FindMaximumResponse {
+	int32 response = 1;
+}
+
 service calculator {
 	rpc PrimeDecomposition (PrimeDecompositionRequest) returns (stream PrimeDecompositionResponse);
 	rpc ComputeAverage (stream ComputeAverageRequest) returns (ComputeAverageResponse);
+	rpc FindMaximum (stream FindMaximumRequest) returns (stream FindMaximumResponse);
 }

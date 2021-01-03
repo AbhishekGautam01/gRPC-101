@@ -39,5 +39,15 @@ namespace server
             }
             return new ComputeAverageResponse() { Response = (totalElement != 0) ? currentSum / totalElement : currentSum };
         }
+
+        public override async Task FindMaximum(IAsyncStreamReader<FindMaximumRequest> requestStream, IServerStreamWriter<FindMaximumResponse> responseStream, ServerCallContext context)
+        {
+            var elements = new List<int>();
+            while(await requestStream.MoveNext())
+            {
+                elements.Add(requestStream.Current.Request);
+                await responseStream.WriteAsync(new FindMaximumResponse() { Response = elements.Max() });
+            };
+        }
     }
 }
