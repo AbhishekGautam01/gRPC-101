@@ -91,8 +91,38 @@ namespace client
             var average = await computeAverageStream.ResponseAsync;
             Console.WriteLine($"Average: {average}");
             #endregion
+            #region Bi-Di Greeting
+            await DoGreetEveryone(greetingClient);
+            #endregion
             channel.ShutdownAsync().Wait();
             Console.ReadLine();
+        }
+
+        public static async Task DoGreetEveryone(GreetingService.GreetingServiceClient client)
+        {
+            var stream = client.GreetEveryone();
+            var responseReaderTask = Task.Run(async () =>
+            {
+                while (await stream.ResponseStream.MoveNext())
+                {
+                    Console.WriteLine("Recieved: " + stream.ResponseStream.Current.Result);
+                };
+            });
+            Greeting[] greetings =
+            {
+                new Greeting(){FirstName="Abhishek", LastName="Gautam"},
+                new Greeting(){FirstName="Bob", LastName="Builder"}
+            };
+            foreach (var greeting in greetings)
+            {
+                await stream.RequestStream.WriteAsync(new GreetEveryoneRequest()
+                {
+                    Greeting = greeting
+                });
+            }
+
+            await stream.RequestStream.CompleteAsync();
+            await responseReaderTask;
         }
     }
 }
